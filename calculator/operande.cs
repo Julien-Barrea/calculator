@@ -28,7 +28,7 @@ namespace calculator
         public Operande(Operande o)
         {
             myNumber = new Queue<char>();
-            foreach(char elem in o.myNumber)
+            foreach (char elem in o.myNumber)
             {
                 myNumber.Enqueue(elem);
             }
@@ -45,10 +45,10 @@ namespace calculator
             myNumber.Enqueue(c);
         }
 
-        public void removeLast() 
+        public void removeLast()
         {
             int size = myNumber.Count();
-            if(size > 0)
+            if (size > 0)
             {
                 Queue<char> tmp = new Queue<char>();
 
@@ -78,28 +78,29 @@ namespace calculator
         {
             int value = 0;
             int nbFloat = 0;
+            Boolean isDouble = false;
 
-            foreach(char elem in myNumber)
+            foreach (char elem in myNumber)
             {
-                if ( elem != '.' )
+                if (isDouble) nbFloat++;
+                if (elem != '.')
                 {
                     value *= 10;
                     value += elem - '0';
                 }
                 else
                 {
-                    nbFloat = -1;
+                    isDouble = true;
                 }
-                nbFloat++;
             }
 
-            return value / (double)(Math.Pow(10,nbFloat));
+            return value / (double)(Math.Pow(10, nbFloat));
         }
 
-        public double makeOperation(double nbr2)
+        public double makeOperation(double op1)
         {
-            double nbr1 = this.toDouble();
-            return op.makeOperation(nbr1,nbr2);
+            double op2 = this.toDouble();
+            return op.makeOperation(op1, op2);
         }
 
         public double makeOperation(Operande o2)

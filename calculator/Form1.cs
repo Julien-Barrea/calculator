@@ -17,25 +17,24 @@ namespace calculator
     {
         Queue<Operande> calculation;
         Operande currentNumber;
+        double previousResult;
         private bool needReset;
-        private bool isDouble;
+
         public Form1()
         {
             InitializeComponent();
             label1.Text = null;
             calculation = new Queue<Operande>();
             currentNumber = new Operande('+');
-            needReset = false;
-            isDouble = false;
-
+            previousResult = 0.0;
         }
 
-        private void reset()
+        private void reset(double preRes=0.0)
         {
             calculation = new Queue<Operande>();
             currentNumber = new Operande();
             label1.Text = null;
-            needReset = false;
+            previousResult = preRes;
         }
 
  //function keys
@@ -53,20 +52,12 @@ namespace calculator
         private void button23_Click(object sender, EventArgs e)
         {
             // show
-            label1.Text = queue1.toFloat().ToString();
         }
 
         private void button10_Click(object sender, EventArgs e)
         {
             // >
-            if (queue2 == null)
-            {
-                queue1.removeLast();
-            }
-            else
-            {
-                queue2.removeLast();   
-            }
+            currentNumber.removeLast();
             if(label1.Text.Length > 0) label1.Text = label1.Text.Remove(label1.Text.Length - 1);
         }
 
@@ -79,88 +70,32 @@ namespace calculator
         private void button11_Click(object sender, EventArgs e)
         {
             // .
-            isDouble = true;
             char value = '.';
-            if (needReset) reset();
-            if (queue2 == null)
-            {
-                queue1.addChar(value);
-            }
-            else
-            {
-                queue2.addChar(value);
-            }
+            currentNumber.addChar(value);
             label1.Text += value;
         }
 
         private void button13_Click(object sender, EventArgs e)
         {
             // = button
-            double result = 0.0;
+            calculation.Enqueue(currentNumber);
 
-            foreach(Operande o in calculation)
-            {
-                
+            try 
+            { 
+                foreach(Operande o in calculation)
+                {
+                    previousResult = o.makeOperation(previousResult);
+                }
+            
+                reset(previousResult);
+                label1.Text = previousResult.ToString();
             }
-            if (queue2 != null && !queue2.isEmpty())
+            catch(ArithmeticException exc)
             {
-                double nb1 = queue1.toFloat();
-                double nb2 = queue2.toFloat();
-                double res = 0.0;
-                reset();
-                try
-                {
-                    switch (op)
-                    {
-                        case '+':
-                            res = nb1 + nb2;
-                            break;
-
-                        case '-':
-                            res = nb1 - nb2;
-                            break;
-
-                        case '*':
-                            res = nb1 * nb2;
-                            break;
-
-                        case '/':
-                            res = (double)nb1 / (double)nb2;
-                            break;
-
-                        case 'd':
-                             res = (int)nb1 / (int)nb2;
-                            break;
-
-                        case 'm':
-                            res = nb1 % nb2;
-                            break;
-
-                        case '^':
-                            if (nb2 == 0) res = 1;
-                            else
-                            {
-                                res = nb1;
-                                for (int i = 1; i < nb2; i++) res *= nb1;
-                            }
-                            break;
-
-                        default:
-                            res = 0;
-                            break;
-                    }
-                    label1.Text = res.ToString();
-                }
-                catch(ArithmeticException exc)
-                {
-                    label1.Text = "Error div 0 !";
-                }
-                finally
-                {
-                    needReset = true;
-                }
-                
+                label1.Text = "Error div 0 !";
+                needReset = true;
             }
+                
         }
 
 // operators
@@ -225,8 +160,6 @@ namespace calculator
         private void button12_Click(object sender, EventArgs e)
         {
             char value = '0';
-            if (needReset) reset();
-
             currentNumber.addChar(value);
             label1.Text += value.ToString();
         }
@@ -234,8 +167,6 @@ namespace calculator
         private void button1_Click(object sender, EventArgs e)
         {
             char value = '1';
-            if (needReset) reset();
-
             currentNumber.addChar(value);
             label1.Text += value.ToString();
         }
@@ -243,8 +174,6 @@ namespace calculator
         private void button2_Click(object sender, EventArgs e)
         {
             char value = '2';
-            if (needReset) reset();
-
             currentNumber.addChar(value);
             label1.Text += value.ToString();
         }
@@ -252,8 +181,6 @@ namespace calculator
         private void button3_Click(object sender, EventArgs e)
         {
             char value = '3';
-            if (needReset) reset();
-
             currentNumber.addChar(value);
             label1.Text += value.ToString();
         }
@@ -261,8 +188,6 @@ namespace calculator
         private void button4_Click(object sender, EventArgs e)
         {
             char value = '4';
-            if (needReset) reset();
-
             currentNumber.addChar(value);
             label1.Text += value.ToString();
         }
@@ -270,8 +195,6 @@ namespace calculator
         private void button5_Click(object sender, EventArgs e)
         {
             char value = '5';
-            if (needReset) reset();
-
             currentNumber.addChar(value);
             label1.Text += value.ToString();
         }
@@ -279,17 +202,13 @@ namespace calculator
         private void button6_Click(object sender, EventArgs e)
         {
             char value = '6';
-            if (needReset) reset();
-
-            currentNumber.addChar(value);
+            currentNumber.addChar('6');
             label1.Text += value.ToString();
         }
 
         private void button7_Click(object sender, EventArgs e)
         {
             char value = '7';
-            if (needReset) reset();
-
             currentNumber.addChar(value);
             label1.Text += value.ToString();
         }
@@ -297,8 +216,6 @@ namespace calculator
         private void button8_Click(object sender, EventArgs e)
         {
             char value = '8';
-            if (needReset) reset();
-
             currentNumber.addChar(value);
             label1.Text += value.ToString();
         }
@@ -306,8 +223,6 @@ namespace calculator
         private void button9_Click(object sender, EventArgs e)
         {
             char value = '9';
-            if (needReset) reset();
-
             currentNumber.addChar(value);
             label1.Text += value.ToString();
         }
