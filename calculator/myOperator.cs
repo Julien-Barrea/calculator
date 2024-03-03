@@ -46,11 +46,27 @@ namespace calculator
                         return res;
                     }
 
+                case 's':
+                    return Math.Sqrt(b);
+
+                case '|':
+                    return (int)a | (int)b;
+
+                case '&':
+                    return (int)a & (int)b;
+
+                case 'x':
+                    return (int)a ^ (int)b;
+
                 default:
                     throw new Exception();
             }
         }
 
+        public String ToString()
+        {
+            return " " + op.ToString() + " ";
+        }
 
     }
 }

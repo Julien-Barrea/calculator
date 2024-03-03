@@ -10,8 +10,9 @@ namespace calculator
 {
     class Operande
     {
+        public myOperator op { set; private get; }
         Queue<char> myNumber;
-        myOperator op;
+        public event EventHandler addingAChar;
 
         public Operande()
         {
@@ -43,6 +44,7 @@ namespace calculator
         public void addChar(char c)
         {
             myNumber.Enqueue(c);
+            addingAChar(this, new EventArgs());
         }
 
         public void removeLast()
@@ -57,6 +59,8 @@ namespace calculator
                     tmp.Enqueue(myNumber.Dequeue());
                 }
                 myNumber = tmp;
+
+                addingAChar(this, new EventArgs());
             }
         }
 
@@ -108,6 +112,16 @@ namespace calculator
             double nbr1 = this.toDouble();
             double nbr2 = o2.toDouble();
             return op.makeOperation(nbr1, nbr2);
+        }
+
+        public override string ToString()
+        {
+            string str = op.ToString();
+            foreach(char elem in myNumber)
+            {
+                str += elem;
+            }
+            return str;
         }
     }
 }
